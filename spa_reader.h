@@ -201,33 +201,21 @@ class SpaReader : public Component, public UARTDevice, public CustomAPIDevice {
 
   void decodeState() {
     String s;
-    double d = 0.0;
-    double c = 0.0;
+    float e = 0.0;
+    float d = 0.0;
+    float c = 0.0;
 
     // 25:Flag Byte 20 - Set Temperature
-    d = Q_in[25];
-    /*
-    if (SpaConfig.temp_scale == 1) {
-      d = Q_in[25];
-    } else if (SpaConfig.temp_scale == 0){
-      d = Q_in[25] / 2;
-      if (Q_in[25] % 2 == 1) d += 0.5;
-    }*/
+    e = Q_in[25];
+    d = e / 2;
 
     ESP_LOGD("Spa/target_temp/state", String(d, 2).c_str());
     target_temp_sensor->publish_state(d);
 
     // 7:Flag Byte 2 - Actual temperature
     if (Q_in[7] != 0xFF) {
-      d = Q_in[7];
-      /* this doesn't seem reliable
-      if (SpaConfig.temp_scale == 1) {
-        d = Q_in[7];
-      } else if (SpaConfig.temp_scale == 0){
-        d = Q_in[7] / 2;
-        if (Q_in[7] % 2 == 1) d += 0.5;
-      }
-      */
+      e = Q_in[7];
+      d = e / 2;
       if (c > 0) {
         if ((d > c * 1.2) || (d < c * 0.8)) d = c; //remove spurious readings greater or less than 20% away from previous read
       }
@@ -467,9 +455,9 @@ class SpaReader : public Component, public UARTDevice, public CustomAPIDevice {
     //ESP_LOGD("Spa/debug/have_faultlog", "have the faultlog, #2");
   }
 
-  void on_set_temp(int temp) {
-    if (temp >= 62 || temp < 105) {
-      settemp = temp;
+  void on_set_temp(float temp) {
+    if (temp >= 26 || temp <= 40) {
+      settemp = temp * 2;
       send = 0xff;
     }
   }
