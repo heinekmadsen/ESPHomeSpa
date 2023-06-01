@@ -475,7 +475,12 @@ class SpaReader : public Component, public UARTDevice, public CustomAPIDevice {
       send = 0x21;
     }
   }
-
+  void on_toggle_heatingmode() {
+    send = 0x51;
+  }
+  void on_toggle_range() {
+    send = 0x50;
+  }
   void on_toggle_light() {
     send = 0x11;
   }
@@ -495,6 +500,8 @@ class SpaReader : public Component, public UARTDevice, public CustomAPIDevice {
     register_service(&SpaReader::on_toggle_light, "toggle_light");
     register_service(&SpaReader::on_toggle_jet1, "toggle_jet1");
     register_service(&SpaReader::on_toggle_jet2, "toggle_jet2");
+    register_service(&SpaReader::on_toggle_heatingmode, "toggle_heatingmode");
+    register_service(&SpaReader::on_toggle_range, "toggle_range");
   }
   
   void loop() override {
