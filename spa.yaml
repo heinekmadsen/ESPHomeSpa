@@ -36,11 +36,11 @@ sensor:
 
   sensors:
   - name: "Current Temp"
-    unit_of_measurement: °F
-    accuracy_decimals: 2
+    unit_of_measurement: °C
+    accuracy_decimals: 1
   - name: "Target Temp"
-    unit_of_measurement: °F
-    accuracy_decimals: 2
+    unit_of_measurement: °C
+    accuracy_decimals: 1
   - name: "Jet1"
   - name: "Jet2"
   - name: "Blower"
