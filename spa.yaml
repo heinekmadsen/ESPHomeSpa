@@ -32,7 +32,7 @@ sensor:
   lambda: |-
     auto spareader = new SpaReader(id(spa_uart_bus));
     App.register_component(spareader);
-    return {spareader->temp_sensor,spareader->target_temp_sensor,spareader->jet1_sensor,spareader->jet2_sensor,spareader->blower_sensor,spareader->light_sensor,spareader->restmode_sensor,spareader->highrange_sensor,spareader->hour_sensor,spareader->minute_sensor};
+    return {spareader->temp_sensor,spareader->target_temp_sensor,spareader->jet1_sensor,spareader->jet2_sensor,spareader->blower_sensor,spareader->light_sensor,spareader->restmode_sensor,spareader->highrange_sensor,spareader->hour_sensor,spareader->minute_sensor,spareader->heater_sensor};
 
   sensors:
   - name: "Current Temp"
@@ -49,6 +49,7 @@ sensor:
   - name: "High Range"
   - name: "Hour"
   - name: "Minute"
+  - name: "Heater"
 # Enable Home Assistant API
 api:
   encryption:
