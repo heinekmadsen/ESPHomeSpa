@@ -34,6 +34,7 @@ class SpaReader : public Component, public UARTDevice, public CustomAPIDevice {
     uint8_t light :1;
     uint8_t restmode:1;
     uint8_t highrange:1;
+    uint8_t heater:1;
     uint8_t hour :5;
     uint8_t minutes :6;
   } SpaState;
@@ -88,6 +89,7 @@ class SpaReader : public Component, public UARTDevice, public CustomAPIDevice {
   Sensor *highrange_sensor = new Sensor();
   Sensor *hour_sensor = new Sensor();
   Sensor *minute_sensor = new Sensor();
+  Sensor *heater_sensor = new Sensor();
 
   uint8_t crc8(CircularBuffer<uint8_t, 35> &data) {
     unsigned long crc;
@@ -261,9 +263,15 @@ class SpaReader : public Component, public UARTDevice, public CustomAPIDevice {
 
     // 15:Flags Byte 10 / Heat status, Temp Range
     d = bitRead(Q_in[15], 4);
-    if (d == 0) ESP_LOGD("Spa/heatstate/state", STROFF);
-    else if (d == 1 || d == 2) ESP_LOGD("Spa/heatstate/state", STRON);
-
+    if (d == 0) {
+      ESP_LOGD("Spa/heatstate/state", STROFF);
+      heater_sensor->publish_state(0);
+      SpaState.heater = 0;
+    } else if (d == 1 || d == 2) {
+      ESP_LOGD("Spa/heatstate/state", STRON);
+      heater_sensor->publish_state(1);
+      SpaState.heater = 1;
+    }
     d = bitRead(Q_in[15], 2);
     if (d == 0) {
       ESP_LOGD("Spa/highrange/state", STROFF); //LOW
