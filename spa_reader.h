@@ -37,6 +37,7 @@ class SpaReader : public Component, public UARTDevice, public CustomAPIDevice {
     uint8_t heater:1;
     uint8_t hour :5;
     uint8_t minutes :6;
+    uint8_t circ :1;
   } SpaState;
 
   struct {
@@ -90,6 +91,7 @@ class SpaReader : public Component, public UARTDevice, public CustomAPIDevice {
   Sensor *hour_sensor = new Sensor();
   Sensor *minute_sensor = new Sensor();
   Sensor *heater_sensor = new Sensor();
+  Sensor *circ_sensor = new Sensor();
 
   uint8_t crc8(CircularBuffer<uint8_t, 35> &data) {
     unsigned long crc;
@@ -305,10 +307,14 @@ class SpaReader : public Component, public UARTDevice, public CustomAPIDevice {
     }
 
     // 18:Flags Byte 13
-    if (bitRead(Q_in[18], 1) == 1)
+    if (bitRead(Q_in[18], 1) == 1) {
       ESP_LOGD("Spa/circ/state", STRON);
-    else
+      SpaState.circ = 1;      
+      circ_sensor->publish_state(1);
+    } else
       ESP_LOGD("Spa/circ/state", STROFF);
+      SpaState.circ = 0;      
+      circ_sensor->publish_state(0);
 
     if (bitRead(Q_in[18], 2) == 1) {
       ESP_LOGD("Spa/blower/state", STRON);
