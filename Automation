@@ -1,48 +1,34 @@
-switch:
-  - platform: template
-    switches:
-      spajet1:
-        value_template: "{{ is_state('sensor.jet1', '1') }}"
-        friendly_name: "Spa Jet1"
-        turn_on:
-          -  service: esphome.spa_toggle_jet1
-             data: {}
-        turn_off:
-          -  service: esphome.spa_toggle_jet1
-             data: {}
-      spajet2:
-        value_template: "{{ is_state('sensor.jet2', '1') }}"
-        friendly_name: "Spa Jet2"
-        turn_on:
-          -  service: esphome.spa_toggle_jet2
-             data: {}
-        turn_off:
-          -  service: esphome.spa_toggle_jet2
-             data: {}
-      spalight:
-        value_template: "{{ is_state('sensor.light', '1') }}"
-        friendly_name: "Spa Light"
-        turn_on:
-          -  service: esphome.spa_toggle_light
-             data: {}
-        turn_off:
-          -  service: esphome.spa_toggle_light
-             data: {}
-      sparange:
-        value_template: "{{ is_state('sensor.high_range', '1') }}"
-        friendly_name: "Spa Range High/Low"
-        turn_on:
-          -  service: esphome.spa_toggle_range
-             data: {}
-        turn_off:
-          -  service: esphome.spa_toggle_range
-             data: {}
-      spaheatingmode:
-        value_template: "{{ is_state('sensor.rest_mode', '1') }}"
-        friendly_name: "Spa Rest Mode"
-        turn_on:
-          -  service: esphome.spa_toggle_heatingmode
-             data: {}
-        turn_off:
-          -  service: esphome.spa_toggle_heatingmode
-             data: {}
+- id: '123456789'
+  alias: Spa Temp Change
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - input_number.temp_spa
+  condition: []
+  action:
+  - service: esphome.spa_set_target_temp
+    data:
+      temp: '{{ (states("input_number.temp_spa") ) }}'
+  mode: single
+- id: '122345678'
+  alias: Spa Temp fix
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.target_temp
+  condition: []
+  action:
+  - service: input_number.set_value
+    data:
+      value: '{{ states.sensor.target_temp.state }}'
+    target:
+      entity_id: input_number.temp_spa
+  mode: single
+  
+  
+  
+Create a Number Input Helper called temp_spa
+Set it to proper range (For C 26.5 to 40.0, steps of 0.5)
+Make sure all sensor names match
