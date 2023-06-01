@@ -1,5 +1,7 @@
 # ESPHomeSpa
 
+Fork of jrownys code, just hardcoded it to C instead of F.
+
 This is an ESPHome version of Cribskip's esp8266 library, as such, it also runs on ESP32.
 
 Most of the code is forked from https://github.com/cribskip/esp8266_spa 
