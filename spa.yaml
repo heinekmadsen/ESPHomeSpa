@@ -4,10 +4,14 @@ external_components:
       path: ./components
 
 esphome:
-  name: spa
+  name: esp-spa
+  friendly_name: esp-spa
+  platformio_options:
+    board_build.flash_mode: dio
+    board_build.extra_flags: []
 
 esp32:
-  board: esp32dev
+  board: esp32-c3-devkitm-1
   framework:
     type: arduino
 
@@ -16,61 +20,78 @@ logger:
 
 uart:
   id: spa_uart_bus
-  tx_pin: GPIO17
-  rx_pin: GPIO16
+  tx_pin: GPIO21
+  rx_pin: GPIO20
   data_bits: 8
   parity: NONE
   stop_bits: 1
   baud_rate: 115200
-  rx_buffer_size: 128
-#  debug:
-#    direction: RX
-#    dummy_receiver: true
-spa_reader:
-  uart_id: spa_uart_bus
-  temp_sensor:
-    name: "temp"
-  circ_binary_sensor:
-    name: "Circ"
-# sensor:
-# - platform: custom
-#   lambda: |-
-#     auto spareader = new SpaReader(id(spa_uart_bus));
-#     App.register_component(spareader);
-#     return {spareader->temp_sensor,spareader->target_temp_sensor,spareader->jet1_sensor,spareader->jet2_sensor,spareader->blower_sensor,spareader->light_sensor,spareader->restmode_sensor,spareader->highrange_sensor,spareader->hour_sensor,spareader->minute_sensor,spareader->heater_sensor,spareader->circ_sensor};
 
-#   sensors:
-#   - name: "Current Temp"
-#     unit_of_measurement: °C
-#     accuracy_decimals: 1
-#   - name: "Target Temp"
-#     unit_of_measurement: °C
-#     accuracy_decimals: 1
-#   - name: "Jet1"
-#   - name: "Jet2"
-#   - name: "Blower"
-#   - name: "Light"
-#   - name: "Rest Mode"
-#   - name: "High Range"
-#   - name: "Hour"
-#   - name: "Minute"
-#   - name: "Heater"
-#   - name: "Circulation Pump"
-# # Enable Home Assistant API
+climate:
+  - platform: balboa_spa
+    name: "My Spa"
+    balboa_spa_id: balboa_spa_id
+
+button:
+  - platform: balboa_spa
+    name: "Lights Toggle"
+    button_datapoint: 0
+  - platform: balboa_spa
+    name: "Jet1 Toggle"
+    button_datapoint: 1
+    icon: "mdi:fan"
+  - platform: balboa_spa
+    name: "Jet2 Toggle"
+    button_datapoint: 2
+    icon: "mdi:fan"
+  
+binary_sensor:
+  - platform: balboa_spa
+    name: "Lights"
+    binary_sensor_datapoint: 20
+  - platform: balboa_spa
+    name: "Heater"
+    binary_sensor_datapoint: 21
+  - platform: balboa_spa
+    name: "Circulation Pump"
+    binary_sensor_datapoint: 22
+  - platform: balboa_spa
+    name: "Rest"
+    binary_sensor_datapoint: 23
+  - platform: balboa_spa
+    name: "Jet1"
+    binary_sensor_datapoint: 24
+  - platform: balboa_spa
+    name: "Jet2"
+    binary_sensor_datapoint: 25
+  - platform: balboa_spa
+    name: "Blower"
+    binary_sensor_datapoint: 26
+
+balboa_spa:
+  id: balboa_spa_id
+  uart_id: spa_uart_bus
+  fault_text_sensor:
+    name: "Fault Message"
+  
+
 api:
+  encryption:
+    key: !secret api_key
 
 ota:
   platform: esphome
-  password: 123
+  password: !secret ota_pass
 
 wifi:
-  ssid: a123
-  password: a123123123123
-
+  ssid: !secret wifi_ssid
+  password: !secret wifi_pass
+  use_address: !secret spa_address
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Spa Fallback Hotspot"
     password: a123123123123
 
+  output_power: 8.5dB
 captive_portal:
     
