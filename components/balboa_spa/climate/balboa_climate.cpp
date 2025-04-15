@@ -21,9 +21,9 @@ namespace esphome
     // }
     void BalboaClimate::setup()
     {
-      this->parent_->register_sensor_callback(40, [this](const float temp)
-                                              { this->target_temperature = temp; this->publish_state();});
       this->parent_->register_sensor_callback(41, [this](const float temp)
+                                              { this->target_temperature = temp; this->publish_state();});
+      this->parent_->register_sensor_callback(40, [this](const float temp)
                                               { 
                                                 this->current_temperature = temp; 
                                               this->publish_state(); });
