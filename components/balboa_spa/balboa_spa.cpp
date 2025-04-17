@@ -117,7 +117,7 @@ namespace esphome
         this->target_temp_state_update_ = func;
         break;
       case 41:
-        this->current_temp_state_update_ = func;
+      this->target_temp_state_update_ = func;
         break;
       }
     }
