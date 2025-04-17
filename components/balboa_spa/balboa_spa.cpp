@@ -115,8 +115,10 @@ namespace esphome
       {
       case 40:
         this->current_temp_state_update_ = func;
+        break;
       case 41:
         this->target_temp_state_update_ = func;
+        break;
       }
     }
         void BalboaSpa::register_binary_sensor_callback(uint8_t datapoint, const std::function<void(bool)> &func)
