@@ -114,10 +114,10 @@ namespace esphome
       switch (datapoint)
       {
       case 40:
-        this->current_temp_state_update_ = func;
+        this->target_temp_state_update_ = func;
         break;
       case 41:
-        this->target_temp_state_update_ = func;
+        this->current_temp_state_update_ = func;
         break;
       }
     }
