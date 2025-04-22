@@ -22,11 +22,16 @@ namespace esphome
     void BalboaClimate::setup()
     {
       this->parent_->register_sensor_callback(40, [this](const float temp)
-                                              { this->target_temperature = temp; this->publish_state();});
+                                              { this->target_temperature = temp; this->publish_state(); });
       this->parent_->register_sensor_callback(41, [this](const float temp)
-                                              { 
-                                                this->current_temperature = temp; 
-                                              this->publish_state(); });
+                                              { this->current_temperature = temp; this->publish_state(); });
+
+      // Register callback for heater state
+      this->parent_->register_binary_sensor_callback(21, [this](const bool state)
+                                                     {
+                                                       this->action = state ? climate::CLIMATE_ACTION_HEATING : climate::CLIMATE_ACTION_IDLE;
+                                                       this->publish_state();
+                                                     });
     }
     void BalboaClimate::control(const climate::ClimateCall &call)
     {
