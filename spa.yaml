@@ -73,6 +73,8 @@ balboa_spa:
   uart_id: spa_uart_bus
   fault_text_sensor:
     name: "Fault Message"
+  time_text_sensor:
+    name: "Spa Time"
   
 
 api:
