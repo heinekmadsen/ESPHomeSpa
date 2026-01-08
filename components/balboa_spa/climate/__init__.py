@@ -8,12 +8,13 @@ from  .. import balboa_spa_ns, CONF_BALBOA_SPA_ID, BalboaSpa
 BalboaClimate = balboa_spa_ns.class_("BalboaClimate", climate.Climate, cg.Component)
 
 CONFIG_SCHEMA = cv.All(
-    climate.CLIMATE_SCHEMA.extend(
+    climate.climate_schema(BalboaClimate)
+    .extend(
         {
-            cv.GenerateID(): cv.declare_id(BalboaClimate),
             cv.GenerateID(CONF_BALBOA_SPA_ID): cv.use_id(BalboaSpa),
         }
-    ).extend(cv.COMPONENT_SCHEMA)
+    )
+    .extend(cv.COMPONENT_SCHEMA)
 )
 async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
