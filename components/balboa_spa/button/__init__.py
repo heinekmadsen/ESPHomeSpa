@@ -3,20 +3,21 @@ from esphome.components import button
 import esphome.config_validation as cv
 import esphome.codegen as cg
 from esphome.const import CONF_ID
-from  .. import balboa_spa_ns, CONF_BALBOA_SPA_ID, BalboaSpa
-#DEPENDENCIES = ["balboa_spa"]
+from .. import balboa_spa_ns, CONF_BALBOA_SPA_ID, BalboaSpa
 
 BalboaButton = balboa_spa_ns.class_("BalboaButton", button.Button, cg.Component)
 
-CONF_BUTTON_DATAPOINT= "button_datapoint"
+CONF_BUTTON_DATAPOINT = "button_datapoint"
+
 CONFIG_SCHEMA = cv.All(
-    button.BUTTON_SCHEMA.extend(
+    button.button_schema(BalboaButton)
+    .extend(
         {
-            cv.GenerateID(): cv.declare_id(BalboaButton),
             cv.GenerateID(CONF_BALBOA_SPA_ID): cv.use_id(BalboaSpa),
-            cv.Required(CONF_BUTTON_DATAPOINT): cv.positive_int 
+            cv.Required(CONF_BUTTON_DATAPOINT): cv.positive_int,
         }
-    ).extend(cv.COMPONENT_SCHEMA)
+    )
+    .extend(cv.COMPONENT_SCHEMA)
 )
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_BALBOA_SPA_ID])
